@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para mi chico</title>
+    <!-- Tailwind CSS for modern utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        nenGreen: '#10b981',
+                        nenBlue: '#06b6d4',
+                        nenPurple: '#8b5cf6',
+                        darkBg: '#090d16',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Cinzel & Plus Jakarta Sans for anime epic aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Plus+Jakarta+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #090d16;
+            color: #f3f4f6;
+            overflow-x: hidden;
+            
+            /* --- FONDO ANIMADO --- */
+            background-image: url('fondo.gif'); 
+            background-size: cover;          /* Hace que cubra toda la pantalla */
+            background-position: center;     /* Lo centra */
+            background-repeat: no-repeat;    /* Evita que se repita en mosaico */
+            background-attachment: fixed;    /* Hace que el fondo sea fijo al hacer scroll */
+        }
+        .font-anime {
+            font-family: 'Cinzel', serif;
+        }
+        /* Nen Aura glow effects */
+        .nen-glow-green {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.3), inset 0 0 15px rgba(16, 185, 129, 0.1);
+        }
+        .nen-glow-blue {
+            box-shadow: 0 0 25px rgba(6, 182, 212, 0.3), inset 0 0 15px rgba(6, 182, 212, 0.1);
+        }
+        .nen-glow-purple {
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.3), inset 0 0 15px rgba(139, 92, 246, 0.1);
+        }
+        /* Canvas background styling */
+        #nen-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        /* Glassmorphism card effect */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+    <!-- Reproductor de música local con el nombre adaptado para espacios -->
+    <audio id="bg-music" src="cancion.mp3" loop></audio>
+    
+    <!-- Canvas for Animated Nen Particles Background -->
+    <canvas id="nen-canvas"></canvas>
+
+    <!-- Header / Navbar -->
+    <header class="w-full py-6 px-6 md:px-12 flex justify-between items-center z-10">
+        <div class="flex items-center space-x-3">
+            <span class="text-2xl md:text-3xl font-anime font-extrabold tracking-wider bg-gradient-to-r from-emerald-400 via-cyan-400 to-purple-500 bg-clip-text text-transparent">
+                HUNTER × HUNTER 
+                Para mi chico precioso
+                Porque tú puedes con todo y mas, nunca te rindas, incluso cuando parezca imposible.
+            </span>
+        </div>
+        <!-- Audio Control Widget -->
+        <div class="flex items-center space-x-3 bg-slate-900/80 border border-slate-700/60 rounded-full px-4 py-2 backdrop-blur-md shadow-lg">
+            <span id="audio-status" class="text-xs uppercase tracking-widest text-emerald-400 font-bold hidden sm:inline">Música Local</span>
+            <button id="toggle-audio" class="w-9 h-9 flex items-center justify-center rounded-full bg-emerald-500 text-slate-950 font-bold hover:bg-emerald-400 transition-transform active:scale-95 shadow-md shadow-emerald-500/20" title="Reproducir / Pausar Música">
+                <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-current hidden" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow container mx-auto px-6 py-10 md:py-16 flex flex-col items-center justify-center z-10">
+        <div class="text-center max-w-3xl mb-16">
+            <div class="inline-block px-4 py-1 mb-4 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold tracking-widest uppercase">
+                Dominio de la Energía Nen
+            </div>
+            <h1 class="text-4xl md:text-6xl font-anime font-extrabold mb-6 leading-tight">
+                Sabiduría del <span class="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Mundial de Cazadores</span>
+            </h1>
+            <p class="text-slate-400 text-base md:text-lg">
+                El camino del cazador está lleno de pruebas, descubrimientos y convicciones inquebrantables. Explora las enseñanzas de los personajes más legendarios de Hunter x Hunter.
+            </p>
+        </div>
+
+        <!-- Quotes Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
+            
+            <!-- Card 1: Gon Freecss -->
+            <div class="glass-card rounded-2xl p-8 flex flex-col justify-between nen-glow-green relative group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-emerald-300 rounded-t-2xl"></div>
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase bg-emerald-950/60 px-3 py-1 rounded-full border border-emerald-500/20">Gon Freecss</span>
+                        <svg class="w-8 h-8 text-emerald-500/30 group-hover:text-emerald-400/60 transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.998v10h-9.998z"/></svg>
+                    </div>
+                    <blockquote class="text-lg md:text-xl font-medium text-slate-200 leading-relaxed mb-6">
+                        "¡Tú puedes con todo! Nunca te rindas, incluso cuando parezca imposible."
+                    </blockquote>
+                </div>
+                <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+                    <span>Potenciador</span>
+                    <span class="text-emerald-400">Determinación Pura</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Kurapika -->
+            <div class="glass-card rounded-2xl p-8 flex flex-col justify-between nen-glow-blue relative group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-400 rounded-t-2xl"></div>
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xs font-bold tracking-widest text-cyan-400 uppercase bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-500/20">Kurapika</span>
+                        <svg class="w-8 h-8 text-cyan-500/30 group-hover:text-cyan-400/60 transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.998v10h-9.998z"/></svg>
+                    </div>
+                    <blockquote class="text-lg md:text-xl font-medium text-slate-200 leading-relaxed mb-6">
+                        "Los humanos son capaces de cualquier cosa... absolutamente de cualquier cosa."
+                    </blockquote>
+                </div>
+                <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+                    <span>Materializador / Especialista</span>
+                    <span class="text-cyan-400">Cadenas del Juicio</span>
+                </div>
+            </div>
+
+            <!-- Card 3: Ging Freecss -->
+            <div class="glass-card rounded-2xl p-8 flex flex-col justify-between nen-glow-purple relative group">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-indigo-400 rounded-t-2xl"></div>
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-xs font-bold tracking-widest text-purple-400 uppercase bg-purple-950/60 px-3 py-1 rounded-full border border-purple-500/20">Ging Freecss</span>
+                        <svg class="w-8 h-8 text-purple-500/30 group-hover:text-purple-400/60 transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.998v10h-9.998z"/></svg>
+                    </div>
+                    <blockquote class="text-lg md:text-xl font-medium text-slate-200 leading-relaxed mb-6">
+                        "Disfruta de los desvíos. Tómate un gran rodeo. Encontrarás cosas mucho más importantes que lo que buscas."
+                    </blockquote>
+                </div>
+                <div class="pt-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400 font-mono">
+                    <span>Cazador de Ruinas</span>
+                    <span class="text-purple-400">Espíritu Libre</span>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 text-center text-xs text-slate-500 z-10 border-t border-slate-900 mt-12">
+        <p>Homenaje a Hunter x Hunter &bull; Diseñado con estética Nen & Aura Interactiva</p>
+    </footer>
+
+    <!-- JavaScript for Nen Particle Animation & Local Audio -->
+    <script>
+        // --- NEN PARTICLE BACKGROUND ANIMATION ---
+        const canvas = document.getElementById('nen-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particleCount = Math.floor((width * height) / 12000);
+        const particles = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2.5 + 0.8,
+                speedY: Math.random() * 0.8 + 0.2,
+                speedX: (Math.random() - 0.5) * 0.4,
+                opacity: Math.random() * 0.5 + 0.2,
+                color: Math.random() > 0.6 ? '#10b981' : (Math.random() > 0.3 ? '#06b6d4' : '#8b5cf6')
+            });
+        }
+
+        function animateNen() {
+            ctx.clearRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.y -= p.speedY;
+                p.x += p.speedX + Math.sin(p.y * 0.01) * 0.2;
+
+                if (p.y < -10) {
+                    p.y = height + 10;
+                    p.x = Math.random() * width;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 12;
+                ctx.shadowColor = p.color;
+                ctx.globalAlpha = p.opacity;
+                ctx.fill();
+                ctx.closePath();
+            });
+
+            requestAnimationFrame(animateNen);
+        }
+        animateNen();
+
+        // --- CONTROL DE MÚSICA LOCAL ---
+        const bgMusic = document.getElementById('bg-music');
+        let isPlaying = false;
+
+        const playBtn = document.getElementById('toggle-audio');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const audioStatus = document.getElementById('audio-status');
+
+        function startAmbientMusic() {
+            bgMusic.play().then(() => {
+                isPlaying = true;
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                audioStatus.textContent = "Reproduciendo";
+                audioStatus.classList.replace('text-emerald-400', 'text-cyan-400');
+            }).catch(error => {
+                console.log("Error al reproducir el audio:", error);
+            });
+        }
+
+        function stopAmbientMusic() {
+            bgMusic.pause();
+            isPlaying = false;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            audioStatus.textContent = "Pausado";
+            audioStatus.classList.replace('text-cyan-400', 'text-emerald-400');
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                startAmbientMusic();
+            } else {
+                stopAmbientMusic();
+            }
+        });
+    </script>
+</body>
+</html>
